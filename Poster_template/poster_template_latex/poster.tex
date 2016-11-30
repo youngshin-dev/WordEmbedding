@@ -110,40 +110,33 @@
 {\LARGE
 \begin{itemize}
 \item Joint modeling of object classes and (correlated) attributes
-\item Demonstrating attributes can help object recognition
+\item Use of word embedding to train Keras layers 
 \item A general learning framework for classification with auxiliary labels
 \end{itemize}
 }
 
 \vspace{2cm}
 
-\begin{center}
-{\LARGE\bf Why attributes alone are not enough?}
-\end{center}
+
 
 \awfhline
 
 \paragraph{Model Formulation}
 \begin{center}
-\includegraphics[height=5in,width=7.5in]{fig/model}
+\includegraphics[height=15in,width=12in]{fig/embedding_pic}
 \end{center}
 
-\vspace{1cm}
+\vspace{0.1cm}
 
 {\LARGE
-{\bf Training data}: $\{(\mybf{x}^{(n)},\mybf{h}^{(n)},y^{(n)})\}_{n=1}^{N}$
+{\bf Training data}: IMDB movie review. Labeled as negative and positive
 
 \vspace{1cm}
 
-{\bf Scoring function}: $f_{\mybf{w}}(\mybf{x},y)=\max_{\mybf{h}}\mybf{w}^\top \Phi(\mybf{x},\mybf{h},y)$, where
-\begin{eqnarray*}
-\mybf{w}^\top \Phi(\mybf{x},\mybf{h},y)=&&\\
-\mybf{w}_y^\top \phi(\mybf{x}) && \textrm{object class model}\\
-+\sum_{j\in\mathcal{V}}\mybf{w}_{h_{j}}^\top\varphi(\mybf{x}) && \textrm{global attribute model}\\
-+\sum_{j\in\mathcal{V}}\mybf{w}_{y,h_{j}}^\top\omega(\mybf{x}) && \textrm{class-specific attribute model}\\
-+\sum_{(j,k)\in\mathcal{E}}\mybf{w}_{j,k}^\top \psi(h_j,h_k) && \textrm{attribute-attribute interaction}\\
-+\sum_{j\in\mathcal{V}}v_{y,h_j} && \textrm{object-attribute interaction}
-\end{eqnarray*}
+{\bf Training algorithm for embedding }: Hierarchical softmax
+\newline
+{\bf Training algorithm for Keras layers }: softmax with stochastic gradient descent
+
 }
 
 }
@@ -151,10 +144,12 @@
 \col{
 \paragraph{Learning and Inference}
 {\LARGE
-{\bf Inference}: tractable if attributes $\mybf{h}$ have special structures (e.g. trees)
-\begin{displaymath}
-\mybf{h}^*=\arg\max_{\mybf{h}}\mybf{w}^\top\Phi(\mybf{x},\mybf{h},y) \ \ \ \forall y\in\mathcal{Y}
-\end{displaymath}
+{\bf Scoring}:  score(w,h) computes the compatibility of word w with the context h
+
+\begin{eqnarray}
+\mybf{P}(w_t | h)=softmax(score(w_t, h))\nonumber
+&&\\=\frac{exp(socre(w_t,h)}{{ \sum_{w' in Vocab}{}}exp(score(w',h))}\nonumber
+\end{eqnarray}
 
 {\bf Learning with latent attributes}:
 \begin{eqnarray}
